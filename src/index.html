@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Macro Calculator</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<h1>Macro Calculator</h1>
+<div id="output">
+  <p>Calculate Macros</p>
+  <ul class="stats">
+    <li>Age:
+      <input type="text" name="age">
+    </li>
+    <li>Weight:
+      <input type="text" name="weight" placeholder=lbs>
+    </li>
+    <li>Height:
+      <input type="text" name="feet" placeholder=Feet>
+      <input type="text" name="inches" placeholder=Inches></li>
+    <li>Sex:
+      <input type="radio" name="sex" value="male" checked> Male
+      <input type="radio" name="sex" value="female"> Female
+    </li>
+    <li>Body Fat %
+      <input type="text" name="bodyFat" placeholder=15>
+    </li>
+    <li>Activity Level:<br>
+      <input type="radio" name="activity" value="sedetary" checked> Sedetary<br>
+      <input type="radio" name="activity" value="light"> Light<br>
+      <input type="radio" name="activity" value="moderate"> Moderate<br>
+      <input type="radio" name="activity" value="very"> Very Active<br>
+      <input type="radio" name="activity" value="very"> Extra Active
+    </li>
+    <li>Goal:<br>
+      <input type="radio" name="goal" value="lose"> Lose Weight<br>
+      <input type="radio" name="goal" value="maintain"> Maintain Weight<br>
+      <input type="radio" name="goal" value="gain" checked> Gain Weight<br>
+    </li>
+    <li>Percentage Increase or Decrease:
+      <input type="text" name="goalPercent" placeholder=20>
+    </li>
+  </ul>
+  <button class="calculate">Calculate</button>
+  <h2 id="tdee"></h2>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>

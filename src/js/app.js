@@ -111,7 +111,8 @@ function calc_TDEE(rdee, activity) {
     sedetary: 1.2,
     light: 1.375,
     moderate: 1.55,
-    active: 1.725
+    very: 1.725,
+    extra: 1.9
   };
 
   return rdee * activityLevel[activity];
@@ -175,3 +176,6 @@ console.log(`TDEE MSJE Goal: ${tdee_msje_goal}`);
 console.log(`RDEE KMF: ${rdee_kmf}`);
 console.log(`TDEE KMF: ${tdee_kmf}`);
 console.log(`TDEE KMF Goal: ${tdee_kmf_goal}`);
+
+const tdeeH2 = document.getElementById('tdee');
+tdeeH2.textContent = `TDEE = ${round(tdee_kmf_goal,0).toString()}`;
