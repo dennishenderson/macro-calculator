@@ -1,7 +1,7 @@
 /**
  * This application is used to calculate Macros
  * This will eventually be moved into calculate a front end macro calculator
- * using DOM connectivity
+ * using DOM manipulation
  */
 
 'use strict';
