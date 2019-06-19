@@ -57,28 +57,6 @@ function convert_cm_to_in(centimeters) {
 }
 
 /**
- * Calculates RDEE (Resting Daily Energy Expenditure)
- * This uses the the Mifflin St Jeor Equation
- * @param  {[float]} mass [mass in kg]
- * @param  {[float]} height [height in cm]
- * @param  {[int]}   age    [age]
- * @param  {[bool]}  male   [male = true, female = false]
- * @return {[float]}        [returns RDEE calories]
- */
-function calc_RDEE_MSJE(mass, height, age, male) {
-  let rdee;
-  if (male) {
-    // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) + 5
-    rdee = (10 * mass) + (6.25 * height) - (5 * age) + 5;
-  } else {
-    // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) – 161
-    rdee = (10 * mass) + (6.25 * height) - (5 * age) - 161;
-  }
-
-  return rdee;
-}
-
-/**
  * Calculates LBM (Lean Body Mass)
  * @param  {[float]} mass    [mass or mass in kg]
  * @param  {[float]} bodyFat [body fat percentage in whole number format]
@@ -101,6 +79,28 @@ function calc_RDEE_KMF(lbm) {
 }
 
 /**
+ * Calculates RDEE (Resting Daily Energy Expenditure)
+ * This uses the the Mifflin St Jeor Equation
+ * @param  {[float]} mass [mass in kg]
+ * @param  {[float]} height [height in cm]
+ * @param  {[int]}   age    [age]
+ * @param  {[bool]}  male   [male = true, female = false]
+ * @return {[float]}        [returns RDEE calories]
+ */
+function calc_RDEE_MSJE(mass, height, age, male) {
+  let rdee;
+  if (male) {
+    // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) + 5
+    rdee = (10 * mass) + (6.25 * height) - (5 * age) + 5;
+  } else {
+    // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) – 161
+    rdee = (10 * mass) + (6.25 * height) - (5 * age) - 161;
+  }
+
+  return rdee;
+}
+
+/**
  * Calculates TDEE (Total Daily Energy Expenditure)
  * @param  {[float]} rdee      [Resting Daily Energy Expenditure]
  * @param  {[string]} activity [activity level]
@@ -117,13 +117,35 @@ function calc_TDEE(rdee, activity) {
   return rdee * activityLevel[activity];
 }
 
+/**
+ * Calculates TDEE Goal in calories
+ * @param  {[float]}  tdee    [TDEE in calories]
+ * @param  {[string]} goal    [Goal Type: gain, loss, maintain]
+ * @param  {int}      percent [Default Value = 0, whole percentage number of gain or loss]
+ * @return {[float]}          [Returnts TDEE goal in calories]
+ */
+function calc_TDEE_Goal(tdee, goal, percent = 0) {
+  let tdeeGoal;
+  if (goal === 'maintain') {
+    tdeeGoal = tdee;
+  } else if (goal === 'gain') {
+    tdeeGoal = tdee + (tdee * (percent / 100));
+  } else if (goal === 'loss') {
+    tdeeGoal = tdee - (tdee * (percent / 100));
+  }
+
+  return tdeeGoal;
+}
+
 // person stats
 let mass = 175.4;
 let bodyFat = 16;
 let height = 70;
 let age = 36;
 let male = true;
-let activity = 'active';
+let activity = 'light';
+let goal = 'gain';
+let goalPercent = 20;
 
 mass = convert_lbs_to_kg(mass);
 height = convert_in_to_cm(height);
@@ -131,11 +153,13 @@ height = convert_in_to_cm(height);
 // Mifflin St Jeor Equation
 let rdee_msje = calc_RDEE_MSJE(mass, height, age, male);
 let tdee_msje = calc_TDEE(rdee_msje, activity);
+let tdee_msje_goal = calc_TDEE_Goal(tdee_msje, goal, goalPercent);
 
 // Katch-McArdle Formula
 let lbm = calc_LBM(mass, bodyFat);
 let rdee_kmf = calc_RDEE_KMF(lbm);
 let tdee_kmf = calc_TDEE(rdee_kmf, activity);
+let tdee_kmf_goal = calc_TDEE_Goal(tdee_kmf, goal, goalPercent);
 
 console.log(`kg: ${mass}`);
 console.log(`lbs: ${convert_kg_to_lbs(mass)}`);
@@ -143,8 +167,11 @@ console.log(`cm: ${height}`);
 console.log(`in: ${convert_cm_to_in(height)}`);
 console.log(`age: ${age}`);
 console.log(`sex: ${male ? 'Male' : 'Female'}`);
+console.log(`LBM kg: ${lbm}`);
+console.log(`LBM lbs: ${convert_kg_to_lbs(lbm)}`);
 console.log(`RDEE MSJE: ${rdee_msje}`);
 console.log(`TDEE MSJE: ${tdee_msje}`);
-console.log(`LBM: ${lbm}`);
+console.log(`TDEE MSJE Goal: ${tdee_msje_goal}`);
 console.log(`RDEE KMF: ${rdee_kmf}`);
 console.log(`TDEE KMF: ${tdee_kmf}`);
+console.log(`TDEE KMF Goal: ${tdee_kmf_goal}`);
