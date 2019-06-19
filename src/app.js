@@ -6,30 +6,34 @@
 
 'use strict';
 
-// For males:
-// 10 x weight (kg) + 6.25 x height (cm) – 5 x age (y) + 5 = REE
-//
-// For females:
-// 10 x weight (kg) + 6.25 x height (cm) – 5 x age (y) – 161 = REE
-
-/**
- * Function takes a lbs weight and converts it to kilograms
- * @param  {[float]} lbs [receives lbs weight]
- * @return {[float]}     [returns kilograms]
- */
-function lbsToKg(lbs) {
-  const kgRatio = 0.45359237;
-  return round(lbs * kgRatio, 2);
-}
-
 /**
  * Function rounds to the decimales passed in
- * @param  {[float]} value    [description]
- * @param  {[float]} decimals [description]
- * @return {[float]}          [description]
+ * @param  {[float]} value    [receives a number to be rounded]
+ * @param  {[float]} decimals [how many decimal places to round to]
+ * @return {[float]}          [returns rounded number]
  */
 function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+/**
+ * Function takes a lbs mass and converts it to kilograms
+ * @param  {[float]} lbs [mass in pounds]
+ * @return {[float]}     [mass in kilograms]
+ */
+function convert_lbs_to_kg(lbs) {
+  const kgRatio = 0.45359237;
+  return lbs * kgRatio;
+}
+
+/**
+ * Function takes a kg mass an converts it to lbs
+ * @param  {[float]} kg [mass in kilograms]
+ * @return {[float]}    [mass in pounds]
+ */
+function convert_kg_to_lbs(kg) {
+  const lbRatio = 2.20462262185;
+  return kg * lbRatio;
 }
 
 /**
@@ -37,39 +41,110 @@ function round(value, decimals) {
  * @param  {[float]} inches [inches]
  * @return {[float]}        [centimeters]
  */
-function inToCm(inches)
-{
-  const cmRatio = .39370;
-  return round(inches / cmRatio, 0);
+function convert_in_to_cm(inches) {
+  const cmRatio = .39370079;
+  return inches / cmRatio;
 }
 
 /**
- * Calculates Resting Energy Expenditure
- * @param  {[float]} weight [weight in kg]
- * @param  {[float]} height [height in cm]
- * @param  {[int]} age    [age]
- * @return {[float]}        [returns REE (Resting Energy Expenditure) calories]
+ * Converts centimeters to inches
+ * @param  {[float]} centimeters [centimeters]
+ * @return {[float]}             [inches]
  */
-function calcREE(weight, height, age) {
-  // 10 x weight (kg) + 6.25 x height (cm) – 5 x age (y) + 5 = REE
-  let ree = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-  return ree;
+function convert_cm_to_in(centimeters) {
+  const inRatio = .39370079;
+  return centimeters * inRatio;
 }
 
-// weight in lbs
-let weight = 175.4;
-weight = lbsToKg(weight);
+/**
+ * Calculates RDEE (Resting Daily Energy Expenditure)
+ * This uses the the Mifflin St Jeor Equation
+ * @param  {[float]} mass [mass in kg]
+ * @param  {[float]} height [height in cm]
+ * @param  {[int]}   age    [age]
+ * @param  {[bool]}  male   [male = true, female = false]
+ * @return {[float]}        [returns RDEE calories]
+ */
+function calc_RDEE_MSJE(mass, height, age, male) {
+  let rdee;
+  if (male) {
+    // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) + 5
+    rdee = (10 * mass) + (6.25 * height) - (5 * age) + 5;
+  } else {
+    // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) – 161
+    rdee = (10 * mass) + (6.25 * height) - (5 * age) - 161;
+  }
 
-// height in cm
+  return rdee;
+}
+
+/**
+ * Calculates LBM (Lean Body Mass)
+ * @param  {[float]} mass    [mass or mass in kg]
+ * @param  {[float]} bodyFat [body fat percentage in whole number format]
+ * @return {[float]}         [returns LBM (Lean Body Mass) in kg]
+ */
+function calc_LBM(mass, bodyFat) {
+  let lbm = (mass * (100 - bodyFat)) / 100;
+  return lbm;
+}
+
+/**
+ * Calculates RDEE (Resting Daily Energy Expenditure)
+ * This uses the Katch-McArdle Formula
+ * @param  {[float]} lbm [lean body mass]
+ * @return {[float]}     [returns RDEE calories]
+ */
+function calc_RDEE_KMF(lbm) {
+  let rdee = 370 + (21.6 * lbm);
+  return rdee;
+}
+
+/**
+ * Calculates TDEE (Total Daily Energy Expenditure)
+ * @param  {[float]} rdee      [Resting Daily Energy Expenditure]
+ * @param  {[string]} activity [activity level]
+ * @return {[float]}           [TDEE in calories]
+ */
+function calc_TDEE(rdee, activity) {
+  const activityLevel = {
+    sedetary: 1.2,
+    light: 1.375,
+    moderate: 1.55,
+    active: 1.725
+  };
+
+  return rdee * activityLevel[activity];
+}
+
+// person stats
+let mass = 175.4;
+let bodyFat = 16;
 let height = 70;
-height = inToCm(height);
-
 let age = 36;
+let male = true;
+let activity = 'active';
 
-let ree = calcREE(weight, height, age);
+mass = convert_lbs_to_kg(mass);
+height = convert_in_to_cm(height);
 
+// Mifflin St Jeor Equation
+let rdee_msje = calc_RDEE_MSJE(mass, height, age, male);
+let tdee_msje = calc_TDEE(rdee_msje, activity);
 
-console.log(weight);
-console.log(height);
-console.log(age);
-console.log(`REE: ${ree}`);
+// Katch-McArdle Formula
+let lbm = calc_LBM(mass, bodyFat);
+let rdee_kmf = calc_RDEE_KMF(lbm);
+let tdee_kmf = calc_TDEE(rdee_kmf, activity);
+
+console.log(`kg: ${mass}`);
+console.log(`lbs: ${convert_kg_to_lbs(mass)}`);
+console.log(`cm: ${height}`);
+console.log(`in: ${convert_cm_to_in(height)}`);
+console.log(`age: ${age}`);
+console.log(`sex: ${male ? 'Male' : 'Female'}`);
+console.log(`RDEE MSJE: ${rdee_msje}`);
+console.log(`TDEE MSJE: ${tdee_msje}`);
+console.log(`LBM: ${lbm}`);
+console.log(`RDEE KMF: ${rdee_kmf}`);
+console.log(`TDEE KMF: ${tdee_kmf}`);
