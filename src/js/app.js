@@ -81,15 +81,15 @@ function calc_RDEE_KMF(lbm) {
 /**
  * Calculates RDEE (Resting Daily Energy Expenditure)
  * This uses the the Mifflin St Jeor Equation
- * @param  {[float]} mass [mass in kg]
- * @param  {[float]} height [height in cm]
- * @param  {[int]}   age    [age]
- * @param  {[bool]}  male   [male = true, female = false]
- * @return {[float]}        [returns RDEE calories]
+ * @param  {[float]}  mass   [mass in kg]
+ * @param  {[float]}  height [height in cm]
+ * @param  {[int]}    age    [age]
+ * @param  {[string]} male   ['male' or 'female']
+ * @return {[float]}         [returns RDEE calories]
  */
 function calc_RDEE_MSJE(mass, height, age, male) {
   let rdee;
-  if (male) {
+  if (male === 'male') {
     // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) + 5
     rdee = (10 * mass) + (6.25 * height) - (5 * age) + 5;
   } else {
@@ -167,7 +167,7 @@ function calc_TDEE_Goal(tdee, goal, percent = 0) {
 // console.log(`cm: ${height}`);
 // console.log(`in: ${convert_cm_to_in(height)}`);
 // console.log(`age: ${age}`);
-// console.log(`sex: ${male ? 'Male' : 'Female'}`);
+// console.log(`gender: ${male ? 'Male' : 'Female'}`);
 // console.log(`LBM kg: ${lbm}`);
 // console.log(`LBM lbs: ${convert_kg_to_lbs(lbm)}`);
 // console.log(`RDEE MSJE: ${rdee_msje}`);
@@ -181,21 +181,58 @@ function calc_TDEE_Goal(tdee, goal, percent = 0) {
 // tdeeH2.textContent = `TDEE = ${round(tdee_kmf_goal,0).toString()}`;
 
 // log input values
-const calcButton = document.getElementById('calculate');
+const calcButton = document.querySelector('button.calculate');
+const macroForm = document.forms.macroForm;
 
-function getData() {
-  let age = document.getElementsByName('age')[0].value;
-  let male = document.getElementsByName('gender')[0].checked;
-  let weight = document.getElementsByName('weight')[0].value;
-  let height = document.getElementsByName('feet')[0].value * 12
-             + document.getElementsByName('inches');
-  let bodyFat = document.getElementsByName('bodyFat')[0].value;
-  let activityLevel = document.getElementsByName('activity')[0].value;
-  let goal = document.getElementsByName('goal')[0].value;
-  let goalPercent = document.getElementsByName('goalPercent')[0].value;
+calcButton.addEventListener('click', () => {
+  let age = Number(macroForm.age.value);
+  let male = macroForm.gender.value;
+  let mass = Number(macroForm.weight.value);
+  let height = Number(macroForm.feet.value) * 12
+             + Number(macroForm.inches.value);
+  let bodyFat = Number(macroForm.bodyFat.value);
+  let activity = macroForm.activity.value;
+  let goal = macroForm.goal.value;
+  let goalPercent = Number(macroForm.goalPercent.value);
 
+  console.log('Inputs...');
   console.log(age);
   console.log(male);
+  console.log(height);
+  console.log(mass);
+  console.log(bodyFat);
+  console.log(activity);
+  console.log(goal);
+  console.log(goalPercent);
 
-  return false;
-}
+  // lbs and in conversions
+  mass = convert_lbs_to_kg(mass);
+  height = convert_in_to_cm(height);
+
+  // Mifflin St Jeor Equation
+  let rdee_msje = calc_RDEE_MSJE(mass, height, age, male);
+  let tdee_msje = calc_TDEE(rdee_msje, activity);
+  let tdee_msje_goal = calc_TDEE_Goal(tdee_msje, goal, goalPercent);
+
+  // Katch-McArdle Formula
+  let lbm = calc_LBM(mass, bodyFat);
+  let rdee_kmf = calc_RDEE_KMF(lbm);
+  let tdee_kmf = calc_TDEE(rdee_kmf, activity);
+  let tdee_kmf_goal = calc_TDEE_Goal(tdee_kmf, goal, goalPercent);
+
+  console.log('Values...');
+  console.log(`age: ${age}`);
+  console.log(`gender: ${male}`);
+  console.log(`kg: ${mass}`);
+  console.log(`lbs: ${convert_kg_to_lbs(mass)}`);
+  console.log(`cm: ${height}`);
+  console.log(`in: ${convert_cm_to_in(height)}`);
+  console.log(`LBM kg: ${lbm}`);
+  console.log(`LBM lbs: ${convert_kg_to_lbs(lbm)}`);
+  console.log(`RDEE MSJE: ${rdee_msje}`);
+  console.log(`TDEE MSJE: ${tdee_msje}`);
+  console.log(document.querySelector('#tdee_msje').textContent = `TDEE MSJE Goal: ${tdee_msje_goal}`);
+  console.log(`RDEE KMF: ${rdee_kmf}`);
+  console.log(`TDEE KMF: ${tdee_kmf}`);
+  console.log(document.querySelector('#tdee_kmf').textContent = `TDEE KMF Goal: ${tdee_kmf_goal}`);
+});
