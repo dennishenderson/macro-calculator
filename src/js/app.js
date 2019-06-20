@@ -138,44 +138,64 @@ function calc_TDEE_Goal(tdee, goal, percent = 0) {
   return tdeeGoal;
 }
 
-// person stats
-let mass = 175.4;
-let bodyFat = 16;
-let height = 70;
-let age = 36;
-let male = true;
-let activity = 'light';
-let goal = 'gain';
-let goalPercent = 20;
+// // person stats
+// let mass = 175.4;
+// let bodyFat = 16;
+// let height = 70;
+// let age = 36;
+// let male = true;
+// let activity = 'light';
+// let goal = 'gain';
+// let goalPercent = 20;
+//
+// mass = convert_lbs_to_kg(mass);
+// height = convert_in_to_cm(height);
+//
+// // Mifflin St Jeor Equation
+// let rdee_msje = calc_RDEE_MSJE(mass, height, age, male);
+// let tdee_msje = calc_TDEE(rdee_msje, activity);
+// let tdee_msje_goal = calc_TDEE_Goal(tdee_msje, goal, goalPercent);
+//
+// // Katch-McArdle Formula
+// let lbm = calc_LBM(mass, bodyFat);
+// let rdee_kmf = calc_RDEE_KMF(lbm);
+// let tdee_kmf = calc_TDEE(rdee_kmf, activity);
+// let tdee_kmf_goal = calc_TDEE_Goal(tdee_kmf, goal, goalPercent);
 
-mass = convert_lbs_to_kg(mass);
-height = convert_in_to_cm(height);
+// console.log(`kg: ${mass}`);
+// console.log(`lbs: ${convert_kg_to_lbs(mass)}`);
+// console.log(`cm: ${height}`);
+// console.log(`in: ${convert_cm_to_in(height)}`);
+// console.log(`age: ${age}`);
+// console.log(`sex: ${male ? 'Male' : 'Female'}`);
+// console.log(`LBM kg: ${lbm}`);
+// console.log(`LBM lbs: ${convert_kg_to_lbs(lbm)}`);
+// console.log(`RDEE MSJE: ${rdee_msje}`);
+// console.log(`TDEE MSJE: ${tdee_msje}`);
+// console.log(`TDEE MSJE Goal: ${tdee_msje_goal}`);
+// console.log(`RDEE KMF: ${rdee_kmf}`);
+// console.log(`TDEE KMF: ${tdee_kmf}`);
+// console.log(`TDEE KMF Goal: ${tdee_kmf_goal}`);
+//
+// const tdeeH2 = document.getElementById('tdee');
+// tdeeH2.textContent = `TDEE = ${round(tdee_kmf_goal,0).toString()}`;
 
-// Mifflin St Jeor Equation
-let rdee_msje = calc_RDEE_MSJE(mass, height, age, male);
-let tdee_msje = calc_TDEE(rdee_msje, activity);
-let tdee_msje_goal = calc_TDEE_Goal(tdee_msje, goal, goalPercent);
+// log input values
+const calcButton = document.getElementById('calculate');
 
-// Katch-McArdle Formula
-let lbm = calc_LBM(mass, bodyFat);
-let rdee_kmf = calc_RDEE_KMF(lbm);
-let tdee_kmf = calc_TDEE(rdee_kmf, activity);
-let tdee_kmf_goal = calc_TDEE_Goal(tdee_kmf, goal, goalPercent);
+function getData() {
+  let age = document.getElementsByName('age')[0].value;
+  let male = document.getElementsByName('gender')[0].checked;
+  let weight = document.getElementsByName('weight')[0].value;
+  let height = document.getElementsByName('feet')[0].value * 12
+             + document.getElementsByName('inches');
+  let bodyFat = document.getElementsByName('bodyFat')[0].value;
+  let activityLevel = document.getElementsByName('activity')[0].value;
+  let goal = document.getElementsByName('goal')[0].value;
+  let goalPercent = document.getElementsByName('goalPercent')[0].value;
 
-console.log(`kg: ${mass}`);
-console.log(`lbs: ${convert_kg_to_lbs(mass)}`);
-console.log(`cm: ${height}`);
-console.log(`in: ${convert_cm_to_in(height)}`);
-console.log(`age: ${age}`);
-console.log(`sex: ${male ? 'Male' : 'Female'}`);
-console.log(`LBM kg: ${lbm}`);
-console.log(`LBM lbs: ${convert_kg_to_lbs(lbm)}`);
-console.log(`RDEE MSJE: ${rdee_msje}`);
-console.log(`TDEE MSJE: ${tdee_msje}`);
-console.log(`TDEE MSJE Goal: ${tdee_msje_goal}`);
-console.log(`RDEE KMF: ${rdee_kmf}`);
-console.log(`TDEE KMF: ${tdee_kmf}`);
-console.log(`TDEE KMF Goal: ${tdee_kmf_goal}`);
+  console.log(age);
+  console.log(male);
 
-const tdeeH2 = document.getElementById('tdee');
-tdeeH2.textContent = `TDEE = ${round(tdee_kmf_goal,0).toString()}`;
+  return false;
+}

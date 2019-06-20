@@ -62,6 +62,14 @@ h3 em {
   color: #8d9aa5;
 }
 
+h4 {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  margin: 0;
+  padding-top: 0.1em;
+  padding-bottom: 5px;
+}
+
 ol {
   margin: 0 0 20px 32px;
   padding: 0;
