@@ -2,12 +2,12 @@
 
 /**
  * Calculates LBM (Lean Body Mass)
- * @param  {[float]} mass    [mass or mass in kg]
+ * @param  {[float]} massKg  [mass in kg]
  * @param  {[float]} bodyFat [body fat percentage in whole number format]
  * @return {[float]}         [returns LBM (Lean Body Mass) in kg]
  */
-function calc_LBM(mass, bodyFat) {
-  let lbm = (mass * (100 - bodyFat)) / 100;
+function calc_LBM(massKg, bodyFat) {
+  let lbm = (massKg * (100 - bodyFat)) / 100;
   return lbm;
 }
 
@@ -25,20 +25,20 @@ function calc_RDEE_KMF(lbm) {
 /**
  * Calculates RDEE (Resting Daily Energy Expenditure)
  * This uses the the Mifflin St Jeor Equation
- * @param  {[float]}  mass   [mass in kg]
+ * @param  {[float]}  massKg   [mass in kg]
  * @param  {[float]}  height [height in cm]
  * @param  {[int]}    age    [age]
- * @param  {[string]} male   ['male' or 'female']
+ * @param  {[string]} gender   ['male' or 'female']
  * @return {[float]}         [returns RDEE calories]
  */
-function calc_RDEE_MSJE(mass, height, age, male) {
+function calc_RDEE_MSJE(massKg, height, age, gender) {
   let rdee;
-  if (male === 'male') {
+  if (gender === 'male') {
     // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) + 5
-    rdee = (10 * mass) + (6.25 * height) - (5 * age) + 5;
+    rdee = (10 * massKg) + (6.25 * height) - (5 * age) + 5;
   } else {
     // RDEE = 10 x mass (kg) + 6.25 x height (cm) – 5 x age (y) – 161
-    rdee = (10 * mass) + (6.25 * height) - (5 * age) - 161;
+    rdee = (10 * massKg) + (6.25 * height) - (5 * age) - 161;
   }
 
   return rdee;
@@ -80,4 +80,28 @@ function calc_TDEE_Goal(tdee, goal, percent = 0) {
   }
 
   return tdeeGoal;
+}
+
+/**
+ * Calculates amount of Protein for a given ratio
+ * @param  {[number]} tdeeGoal [description]
+ * @param  {[number]} ratio    [ratio such as 1.8g/kg]
+ * @return {[object]}          [Returns an object containing calories and grams]
+ */
+function calc_Protein(tdeeGoal, goal, ) {
+  // Minimum: .29g/kg, .64g/lbs
+  // Recomended: .37g/kg, .82g/lbs
+  // Maximum: .45g/kg, 1g/lbs
+
+  let protein = {
+    calories: 0,
+    grams: 0
+  };
+
+  if (goal === 'recomended') {
+    protein.calories = tdee
+  }
+
+
+  return protein;
 }
