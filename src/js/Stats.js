@@ -27,6 +27,20 @@ class Stats {
     this.tdeeGoal = tdeeGoal;
   }
 
+  clear() {
+    this.age = null;
+    this.gender = null;
+    this.mass = {kg: null, lbs: null};
+    this.height = {cm: null, in: null};
+    this.bodyFat = null;
+    this.activityLevel = null;
+    this.goal = null;
+    this.lbm = {kg: null, lbs: null};
+    this.rdee = {msje: null, kmf: null};
+    this.tdee = {msje: null, kmf: null};
+    this.tdeeGoal = {msje: null, kmf: null};
+  }
+
   setMass(kg = null) {
     if (kg !== null) {
       this.mass.kg = kg;

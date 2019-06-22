@@ -36,6 +36,7 @@ function updateGoalText(val) {
   }
 
   document.getElementById('goalText').textContent = goalText;
+
 }
 
 function updateProteinText(val) {
@@ -44,6 +45,10 @@ function updateProteinText(val) {
 }
 
 function setStats() {
+  stats.clear();
+  console.log(stats.lbm.kg);
+  console.log(stats.tdee.kmf);
+
   stats.age = Number(statsForm.age.value);
   stats.gender = statsForm.gender.value;
   stats.setMass(convert_lbs_to_kg(Number(statsForm.weight.value)));
@@ -57,14 +62,24 @@ function setStats() {
 }
 
 function setMacros() {
+  let tdeeGoal = null;
   if (stats.tdeeGoal.kmf !== null) {
     macros.update(stats.mass.lbs, stats.tdeeGoal.kmf);
+    tdeeGoal = stats.tdeeGoal.kmf;
   } else if (stats.tdeeGoal.msje !== null) {
     macros.update(stats.mass.lbs, stats.tdeeGoal.msje);
+    tdeeGoal = stats.tdeeGoal.msje;
   }
 
-  let proteinText = `Protein ${round(macros.protein.grams, 0)}g (${round(macros.protein.percent * 100, 2)}%)`;
+  let calorieText = `Goal: ${round(tdeeGoal, 0)} Calories Per Day`;
+  let proteinText = `Protein: ${round(macros.protein.grams, 0)}g (${round(macros.protein.percent * 100, 2)}%)`;
+  let fatText = `Fat: ${round(macros.fat.grams, 0)}g (${round(macros.fat.percent * 100, 2)}%)`;
+  let carbohydrateText = `Carbohydrates: ${round(macros.carbohydrate.grams, 0)}g (${round(macros.carbohydrate.percent * 100, 2)}%)`;
+
+  document.getElementById('calorieText').textContent = calorieText;
   document.getElementById('proteinText').textContent = proteinText;
+  document.getElementById('fatText').textContent = fatText;
+  document.getElementById('carbohydrateText').textContent = carbohydrateText;
 }
 
 calcButton.addEventListener('click', () => {

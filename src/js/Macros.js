@@ -28,5 +28,13 @@ class Macros {
     this.protein.grams = lbs * this.proteinRatio[this.proteinChoice];
     this.protein.calories = this.protein.grams * 4;
     this.protein.percent = this.protein.calories / tdeeGoal;
+
+    this.fat.calories = tdeeGoal * .25;
+    this.fat.grams = this.fat.calories / 9;
+    this.fat.percent = this.fat.calories / tdeeGoal;
+
+    this.carbohydrate.calories = tdeeGoal - this.protein.calories - this.fat.calories;
+    this.carbohydrate.grams = this.carbohydrate.calories / 4;
+    this.carbohydrate.percent = this.carbohydrate.calories / tdeeGoal;
   }
 }
