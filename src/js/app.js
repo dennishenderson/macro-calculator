@@ -17,53 +17,68 @@ function round(value, decimals) {
 }
 
 const stats = new Stats();
-console.log(stats);
+const macros = new Macros();
 
 // log input values
 const calcButton = document.querySelector('button.calculate');
+const proteinChoice = document.querySelector('.protein');
+const statsForm = document.forms.statsForm;
 const macroForm = document.forms.macroForm;
 
+function updateGoalText(val) {
+  let goalText = '';
+  if (val > 0) {
+    goalText = `Bulk Up (${val}% Over Maintenance)`;
+  } else if (val < 0) {
+    goalText = `Lose Weight (${Math.abs(val)}% Under Maintenance)`
+  } else {
+    goalText = 'Maintain Weight';
+  }
+
+  document.getElementById('goalText').textContent = goalText;
+}
+
+function updateProteinText(val) {
+  macros.ProteinChoice = val;
+  setMacros();
+}
+
+function setStats() {
+  stats.age = Number(statsForm.age.value);
+  stats.gender = statsForm.gender.value;
+  stats.setMass(convert_lbs_to_kg(Number(statsForm.weight.value)));
+  stats.setHeight(convert_in_to_cm(Number(statsForm.feet.value) * 12
+    + Number(statsForm.inches.value)));
+  stats.bodyFat = Number(statsForm.bodyFat.value);
+  stats.activityLevel = statsForm.activity.value;
+  stats.goal = statsForm.goal.value;
+
+  stats.update();
+}
+
+function setMacros() {
+  if (stats.tdeeGoal.kmf !== null) {
+    macros.update(stats.mass.lbs, stats.tdeeGoal.kmf);
+  } else if (stats.tdeeGoal.msje !== null) {
+    macros.update(stats.mass.lbs, stats.tdeeGoal.msje);
+  }
+
+  let proteinText = `Protein ${round(macros.protein.grams, 0)}g (${round(macros.protein.percent * 100, 2)}%)`;
+  document.getElementById('proteinText').textContent = proteinText;
+}
+
 calcButton.addEventListener('click', () => {
-  stats.age = Number(macroForm.age.value);
-  stats.gender = macroForm.gender.value;
-  stats.setMass(convert_lbs_to_kg(Number(macroForm.weight.value)));
-  stats.setHeight(convert_in_to_cm(Number(macroForm.feet.value) * 12
-    + Number(macroForm.inches.value)));
-  stats.bodyFat = Number(macroForm.bodyFat.value);
-  stats.activityLevel = macroForm.activity.value;
-  stats.goal = macroForm.goal.value;
-  stats.goalPercent = Number(macroForm.goalPercent.value);
-
-  stats.updateStats();
-
+  setStats();
+  setMacros();
   console.log(stats);
+  console.log(macros);
+});
 
-  // // Mifflin St Jeor Equation
-  // let rdee_msje = calc_RDEE_MSJE(massKg, height, age, male);
-  // let tdee_msje = calc_TDEE(rdee_msje, activity);
-  // let tdee_msje_goal = calc_TDEE_Goal(tdee_msje, goal, goalPercent);
-  //
-  // // Katch-McArdle Formula
-  // let lbm = calc_LBM(massKg, bodyFat);
-  // let rdee_kmf = calc_RDEE_KMF(lbm);
-  // let tdee_kmf = calc_TDEE(rdee_kmf, activity);
-  // let tdee_kmf_goal = calc_TDEE_Goal(tdee_kmf, goal, goalPercent);
-  //
-  // console.log('Values...');
-  // console.log(`age: ${age}`);
-  // console.log(`gender: ${male}`);
-  // console.log(`kg: ${massKg}`);
-  // console.log(`lbs: ${convert_kg_to_lbs(massKg)}`);
-  // console.log(`cm: ${height}`);
-  // console.log(`in: ${convert_cm_to_in(height)}`);
-  // console.log(`LBM kg: ${lbm}`);
-  // console.log(`LBM lbs: ${convert_kg_to_lbs(lbm)}`);
-  // console.log(`RDEE MSJE: ${rdee_msje}`);
-  // console.log(`TDEE MSJE: ${tdee_msje}`);
-  // console.log(document.querySelector('#tdee_msje').textContent = `TDEE MSJE Goal: ${tdee_msje_goal}`);
-  // console.log(`RDEE KMF: ${rdee_kmf}`);
-  // console.log(`TDEE KMF: ${tdee_kmf}`);
-  // console.log(document.querySelector('#tdee_kmf').textContent = `TDEE KMF Goal: ${tdee_kmf_goal}`);
-  //
-  // console.log(`Protein: $`)
+
+proteinChoice.addEventListener('click', () => {
+  macros.proteinChoice = macroForm.protein.value;
+
+  macros.update(stats.mass.lbs, stats.tdeeGoal.kmf);
+
+  console.log(macros);
 });

@@ -10,7 +10,7 @@
 <div id="output">
   <p>Calculate Macros</p>
   <div id="macroFormDiv">
-    <form id="macroForm">
+    <form id="statsForm">
       <div class="age">
         <h4>Age</h4>
         <input type="text" name="age" placeholder="Age" value="36">
@@ -22,7 +22,7 @@
       </div>
       <div class="weight">
         <h4>Weight</h4>
-        <input type="text" name="weight" placeholder="Weight" value="175">
+        <input type="text" name="weight" placeholder="Weight" value="175.4">
       </div>
       <div class="height">
         <h4>Height</h4>
@@ -35,31 +35,43 @@
       </div>
       <div class="activity">
         <h4>Activity Level</h4>
-        <input type="radio" name="activity" value="sedetary" checked> Sedetary<br>
-        <input type="radio" name="activity" value="light"> Light<br>
+        <input type="radio" name="activity" value="sedetary"> Sedetary<br>
+        <input type="radio" name="activity" value="light" checked> Light<br>
         <input type="radio" name="activity" value="moderate"> Moderate<br>
         <input type="radio" name="activity" value="very"> Very Active<br>
         <input type="radio" name="activity" value="extra"> Extra Active
       </div>
       <div class="goal">
         <h4>Goal</h4>
-        <input type="radio" name="goal" value="lose"> Lose Weight<br>
-        <input type="radio" name="goal" value="maintain"> Maintain Weight<br>
-        <input type="radio" name="goal" value="gain" checked> Gain Weight
+        <span id="goalText">Maintain Weight</span><br>
+        <input type="range" name="goal" min="-20" max="20" step="5" onchange="updateGoalText(this.value);">
       </div>
-      <div class=goalPercent>
-        <h4>Percentage Increase or Decrease</h4>
-        <input type="text" name="goalPercent" placeholder="Goal Percentage" value="20">
+    </form>
+    <button class="calculate">Calculate</button>
+    <form id="macroForm">
+      <p></p>
+      <div class="results">
+        <span id="calories">Calories</span><br>
+        <span id="proteinText">Protein</span><br>
+        <span id="fatText">Fat</span><br>
+        <span id="carbohydrateText">carbohydrate</span>
+      </div>
+      <p></p>
+      <div class="protein">
+        <h4>Adjust Protein</h4>
+        <input type="radio" name="protein" value="adequate" onchange="updateProteinText(this.value);"> Adequate (.64g /lbs)
+        <input type="radio" name="protein" value="recommended" onchange="updateProteinText(this.value);" checked> Recommended (.82g /lbs)
+        <input type="radio" name="protein" value="maximum" onchange="updateProteinText(this.value);"> Maximum (1g /lbs)
       </div>
     </form>
   </div>
-  <button class="calculate">Calculate</button>
   <h2 id="tdee_msje"></h2>
   <h2 id="tdee_kmf"></h2>
 </div>
 <script src="js/convert.js"></script>
 <script src="js/calc.js"></script>
 <script src="js/Stats.js"></script>
+<script src="js/Macros.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

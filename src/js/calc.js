@@ -65,43 +65,21 @@ function calc_TDEE(rdee, activity) {
 /**
  * Calculates TDEE Goal in calories
  * @param  {[float]}  tdee    [TDEE in calories]
- * @param  {[string]} goal    [Goal Type: gain, loss, maintain]
- * @param  {int}      percent [Default Value = 0, whole percentage number of gain or loss]
+ * @param  {[number]} goal    [negative for loss positive for gain]
  * @return {[float]}          [Returnts TDEE goal in calories]
  */
-function calc_TDEE_Goal(tdee, goal, percent = 0) {
+function calc_TDEE_Goal(tdee, goal) {
   let tdeeGoal;
-  if (goal === 'maintain') {
+  if (goal === 0) {
+    // Maintenance
     tdeeGoal = tdee;
-  } else if (goal === 'gain') {
-    tdeeGoal = tdee + (tdee * (percent / 100));
-  } else if (goal === 'loss') {
-    tdeeGoal = tdee - (tdee * (percent / 100));
+  } else if (goal > 0) {
+    // Gain Weight
+    tdeeGoal = tdee + (tdee * (goal / 100));
+  } else {
+    // Lose Weight
+    tdeeGoal = tdee - (tdee * (Math.abs(goal) / 100));
   }
 
   return tdeeGoal;
-}
-
-/**
- * Calculates amount of Protein for a given ratio
- * @param  {[number]} tdeeGoal [description]
- * @param  {[number]} ratio    [ratio such as 1.8g/kg]
- * @return {[object]}          [Returns an object containing calories and grams]
- */
-function calc_Protein(tdeeGoal, goal, ) {
-  // Minimum: .29g/kg, .64g/lbs
-  // Recomended: .37g/kg, .82g/lbs
-  // Maximum: .45g/kg, 1g/lbs
-
-  let protein = {
-    calories: 0,
-    grams: 0
-  };
-
-  if (goal === 'recomended') {
-    protein.calories = tdee
-  }
-
-
-  return protein;
 }

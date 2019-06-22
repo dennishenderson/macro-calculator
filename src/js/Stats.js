@@ -9,8 +9,7 @@ class Stats {
     bodyFat = null,
     activityLevel = null,
     goal = null,
-    goalPercent = null,
-    lbm = null,
+    lbm = {kg: null, lbs: null},
     rdee = {msje: null, kmf: null},
     tdee = {msje: null, kmf: null},
     tdeeGoal = {msje: null, kmf: null}
@@ -22,7 +21,6 @@ class Stats {
     this.bodyFat = bodyFat;
     this.activityLevel = activityLevel;
     this.goal = goal;
-    this.goalPercent = goalPercent;
     this.lbm = lbm;
     this.rdee = rdee;
     this.tdee = tdee;
@@ -43,10 +41,11 @@ class Stats {
     }
   }
 
-  updateStats() {
+  update() {
     // Sets LBM (Lean Body Mass)
     if (this.mass.kg !== null && this.bodyFat !== null) {
-      this.lbm = calc_LBM(this.mass.kg, this.bodyFat);
+      this.lbm.kg = calc_LBM(this.mass.kg, this.bodyFat);
+      this.lbm.lbs = convert_kg_to_lbs(this.lbm.kg);
     }
 
     // Sets RDEE using MSJE (Resting Daily Energy Expenditure)
@@ -61,8 +60,8 @@ class Stats {
 
     // Sets RDEE using KMF (Resting Daily Energy Expenditure)
     //   using (Katch-McArdle Formula)
-    if (this.lbm !== null) {
-      this.rdee.kmf = calc_RDEE_KMF(this.lbm);
+    if (this.lbm.kg !== null) {
+      this.rdee.kmf = calc_RDEE_KMF(this.lbm.kg);
     }
 
     // Sets TDEE using MSJE (Total Daily Energy Expenditure)
@@ -79,18 +78,14 @@ class Stats {
 
     // Sets TDEE Goal using MSJE (Total Daily Energy Expenditure)
     //   using (Mifflin St Jeor Equation)
-    if (this.tdee.msje !== null && this.goal !== null && this.goalPercent !== null) {
-      this.tdeeGoal.msje = calc_TDEE_Goal(this.tdee.msje, this.goal, this.goalPercent);
+    if (this.tdee.msje !== null && this.goal !== null) {
+      this.tdeeGoal.msje = calc_TDEE_Goal(this.tdee.msje, this.goal);
     }
 
     // Sets TDEE Goal using KMF (Resting Daily Energy Expenditure)
     //   using (Katch-McArdle Formula)
-    if (this.tdee.kmf !== null && this.goal !== null && this.goalPercent !== null) {
-      this.tdeeGoal.kmf = calc_TDEE_Goal(this.tdee.kmf, this.goal, this.goalPercent);
+    if (this.tdee.kmf !== null && this.goal !== null) {
+      this.tdeeGoal.kmf = calc_TDEE_Goal(this.tdee.kmf, this.goal);
     }
-  }
-
-  setRDEE() {
-
   }
 }
