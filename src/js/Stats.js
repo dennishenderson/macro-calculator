@@ -35,9 +35,14 @@ class Stats {
     if (this.mass.kg !== 0 && this.bodyFat !== 0) {
       this.lbm.kg = calc_LBM(this.mass.kg, this.bodyFat);
       this.lbm.lbs = convert_kg_to_lbs(this.lbm.kg);
+    } else {
+      this.lbm.defaults();
     }
 
     // updates Energy Values
     this.energy.update(this);
+
+    // update macros
+    this.macros.update(this);
   }
 }

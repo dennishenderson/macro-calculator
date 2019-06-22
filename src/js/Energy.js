@@ -21,7 +21,7 @@ class Energy {
     if (
       stats.bodyFat === 0 &&
       stats.mass.kg !== 0 &&
-      ststs.height.cm !== 0 &&
+      stats.height.cm !== 0 &&
       stats.age !== 0 &&
       stats.gender !== null
     ) {
